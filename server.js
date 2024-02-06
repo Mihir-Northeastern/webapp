@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import initializeRoutes from './routes/index.js';
+import { syncdb } from './sequelize.js';
 
 // Load the environment variables from .env file
 dotenv.config();
@@ -36,6 +37,9 @@ app.use(cors());
 
 initializeRoutes(app);
 
-app.listen(process.env.PORT, () => {    
+
+
+app.listen(process.env.PORT, async() => {    
+    await syncdb();
     console.log(`Server is running on port ${process.env.PORT}`)
 })
