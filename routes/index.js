@@ -5,6 +5,8 @@ const initializeRoutes = (app) => {
 
     app.use('/healthz', healthzRouter);
 
+    app.use('/v1/user/self', userRouter);
+
     app.use('/v1/user', userRouter);
 
     app.use((req, res) => {
