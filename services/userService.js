@@ -1,27 +1,26 @@
 import {User} from "../sequelize.js";
+import * as bcrypt from "../authentication/bcrypt.js";
 
-export const getAllUser = async () => {
-    const users = await User.findAll({
+
+export const getUserById = async (username) => { 
+    console.log('-----------------> ', username);
+    const user = await User.findOne({
         attributes: {
             exclude: ['password']
+        },
+        where: {
+            username: username,
         }
     });
 
-    return users;
-}
-
-export const getUserById = async (id) => { 
-    const user = await User.findByPk(id, {
-        attributes: {
-            exclude: ['password']
-        }
-    });
+    delete user.dataValues.password;
 
     return user;
 }
 
 
 export const createUser = async (user) => {
+    user.password = await bcrypt.hashPassword(user.password);
     const newUser = await User.create({
         ...user,
     });
@@ -30,14 +29,16 @@ export const createUser = async (user) => {
     return newUser;
 }
 
-export const updateUser = async (id, user) => {
+export const updateUser = async (username, user) => {
+    if(user.password) user.password = await bcrypt.hashPassword(user.password);
     const updatedUser = await User.update({
+       
         first_name: user.first_name,
         last_name: user.last_name,
         password: user.password,
     }, {
         where: {
-            id: id,
+            username
         },
         returning: true,
     });
