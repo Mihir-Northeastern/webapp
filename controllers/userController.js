@@ -1,18 +1,9 @@
 import * as userService from '../services/userService.js';
 
-export const getAllUser = async (req, res) => {
-    try {
-        const users = await userService.getAllUser();
-        res.status(200).send(users);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send();
-    }
-}
-
 export const getUserById = async (req, res) => {
     try {
-        const user = await userService.getUserById(req.params.id);
+        console.log(req.user.username);
+        const user = await userService.getUserById(req.user.username);
         if (user) {
             res.status(200).send(user);
         } else {
@@ -20,7 +11,7 @@ export const getUserById = async (req, res) => {
         }
     } catch (err) {
         console.error(err.message);
-        res.status(500).send();
+        res.status(400).send();
     }
 }
 
@@ -30,20 +21,17 @@ export const createUser = async (req, res) => {
         res.status(201).send(newUser);
     } catch (err) {
         console.error(err.message);
-        res.status(500).send();
+        res.status(400).send();
     }
 };
 
 export const updateUser = async (req, res) => {
-    if (Object.keys(req.body).length === 0) {
-        res.status(204).send();
-        return;
-    }
     try {
-        const updatedUser = await userService.updateUser(req.params.id, req.body);
-        res.status(200).send(updatedUser);
+        await userService.updateUser(req.user.username, req.body);
+        
+        res.status(204).send();
     } catch (err) {
         console.error(err.message);
-        res.status(500).send();
+        res.status(400).send();
     }
 }
