@@ -1,9 +1,10 @@
 # webapp
 
-## This guide will walk you through the prerequisites and steps needed to build and deploy the application locally.
+ This guide will walk you through the prerequisites and steps needed to build and deploy the application locally.
 
 ## Prerequisites for Building and Deploying Your Application Locally
-## Ensure you have the following installed on your system before proceeding with the setup:
+
+### Ensure you have the following installed on your system before proceeding with the setup:
 
 
 1. Node.js: Install Node.js from https://nodejs.org/en/download/.
@@ -58,7 +59,7 @@ npm run dev
 
 5. This command will start the server on the port specified in your .env file (default is 3000). You can access the web application by navigating to http://localhost:3000 in your web browser.
 
-Additional Information:
+## Additional Information:
 
 Ensure PostgreSQL is running before starting the application.
 
