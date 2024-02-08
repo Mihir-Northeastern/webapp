@@ -1,4 +1,4 @@
-import { testConnection } from "../services/healthzService.js";
+import { testConnection } from '../services/healthzService.js';
 // Testing connection to the database
 export const get = async (req, res) => {
     try{
