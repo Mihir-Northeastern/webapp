@@ -1,5 +1,5 @@
-import {User} from "../sequelize.js";
-import * as bcrypt from "../authentication/bcrypt.js";
+import {User} from '../sequelize.js';
+import * as bcrypt from '../authentication/bcrypt.js';
 
 
 export const getUserById = async (username) => { 
