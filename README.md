@@ -12,7 +12,7 @@
 3. PostgreSQL: Install PostgreSQL from https://www.postgresql.org/download/
 
 
-## Setup Instructions
+## Setup Instructions  
 Follow these steps to get your application up and running:
 
 1. Unzip the Project Archive:
