@@ -2,7 +2,6 @@ import * as userService from '../services/userService.js';
 
 export const getUserById = async (req, res) => {
     try {
-        console.log(req.user.username);
         const user = await userService.getUserById(req.user.username);
         if (user) {
             res.status(200).send(user);

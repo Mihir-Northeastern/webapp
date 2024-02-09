@@ -10,10 +10,16 @@ const app = express();
 
 //Adding No cache for the required headers
 app.use((req, res, next) => {
-    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.set('Pragma', 'no-cache');
-    res.set('X-Content-Type-Options', 'nosniff');
-    next();
+    
+        res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.set('Pragma', 'no-cache');
+        res.set('X-Content-Type-Options', 'nosniff');
+        
+        if (req.method === 'OPTIONS') {
+            res.status(405).send();
+        } else {
+            next();
+        }
 })
 
 //Middleware to parse the request body
