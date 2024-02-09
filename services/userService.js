@@ -3,7 +3,6 @@ import * as bcrypt from '../authentication/bcrypt.js';
 
 
 export const getUserById = async (username) => { 
-    console.log('-----------------> ', username);
     const user = await User.findOne({
         attributes: {
             exclude: ['password']

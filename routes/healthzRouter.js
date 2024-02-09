@@ -17,6 +17,9 @@ const checkPayload =(req, res, next) => {
 healthzRouter
     .route('/')
     .get(checkPayload , get)
+    .head((req, res) => {    
+      res.status(405).send();
+    })
     .all((req, res) => {    
         res.status(405).send();
     })
