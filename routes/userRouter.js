@@ -1,7 +1,7 @@
 import express from 'express';
 import {auth} from '../authentication/auth.js';
 import * as userController from '../controllers/userController.js';
-import * as healthZService from '../services/healthZService.js';
+import * as healthZService from '../services/healthzService.js';
 
 const userRouter = express.Router();
 
