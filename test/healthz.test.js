@@ -18,7 +18,7 @@ describe('GET /healthz', () => {
 const userData = {
     first_name: "Narendra",
     last_name: "Makwana",
-    username: "n.m@gmil.om",
+    username: "ns.m@gmil.om",
     password: "1234" 
 };
 
