@@ -35,7 +35,7 @@ describe('POST /v1/user/', () => {
         const userFromApi = await request(app)
         .get('/v1/user/self')
         .set('Authorization', `Basic ${base64Credentials}`);
-        expect(userFromApi.statusCode).toBe(401);
+        expect(userFromApi.statusCode).toBe(200);
     });
 });
 
