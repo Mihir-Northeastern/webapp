@@ -1,0 +1,26 @@
+name: packer
+
+on:
+    workflow_dispatch:
+    pull_request:
+        branches: [main]
+
+jobs:
+    packer-validate:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: zip
+              run: zip -r webapp.zip .
+
+            - name: Install Packer
+              run: packer init ./packer/packer.pkr.hcl
+
+            - name: Validate Packer
+              run: packer validate ./packer/packer.pkr.hcl
+                    echo "Packer template is valid"
+
+            - name: Format Packer
+              run: packer fmt ./packer/packer.pkr.hcl
