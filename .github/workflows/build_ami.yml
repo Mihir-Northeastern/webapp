@@ -3,10 +3,14 @@ name: build_ami
 on:
   workflow_dispatch:
   pull_request:
-    branches: [main]
+    branches: 
+      - main
+    types: [closed]  
+
 
 jobs:
   integration-tests:
+    if: github.event.pull_request.merged
     runs-on: ubuntu-latest
 
     services:
@@ -45,6 +49,7 @@ jobs:
 
   build_ami:
     needs: integration-tests
+    if : success()
     runs-on: ubuntu-latest
 
     steps:

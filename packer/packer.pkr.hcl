@@ -46,6 +46,11 @@ build {
     destination = "/tmp/npm.sh"
   }
 
+  provisioner "file"{
+    source = "csye.service"
+    destination = "/tmp/csye.service"
+  }
+
   provisioner "shell" {
     inline = [
       "chmod +x /tmp/install.sh",
