@@ -20,7 +20,6 @@ jobs:
 
             - name: Validate Packer
               run: packer validate ./packer/packer.pkr.hcl
-                    echo "Packer template is valid"
 
             - name: Format Packer
               run: packer fmt ./packer/packer.pkr.hcl
