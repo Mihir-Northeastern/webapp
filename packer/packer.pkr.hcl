@@ -27,22 +27,22 @@ build {
   ]
 
   provisioner "file" {
-    source      = "../webapp.zip"
+    source      = "webapp.zip"
     destination = "/tmp/webapp.zip"
   }
 
   provisioner "file" {
-    source      = "../install.sh"
+    source      = "install.sh"
     destination = "/tmp/install.sh"
   }
 
   provisioner "file" {
-    source      = "../postgres.sh"
+    source      = "postgres.sh"
     destination = "/tmp/postgres.sh"
   }
 
   provisioner "file" {
-    source      = "../npm.sh"
+    source      = "npm.sh"
     destination = "/tmp/npm.sh"
   }
 
