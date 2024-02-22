@@ -1,0 +1,71 @@
+name: build_ami
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+
+jobs:
+  integration-tests:
+    if: ${{ github.event.pull_request.merged }}
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: ${{ vars.DB_NAME }}
+          POSTGRES_USER: ${{ vars.DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Create .env file"
+        run: |
+          touch .env
+          echo DB_HOST=localhost >> .env  # Assuming the service is accessed via localhost within the runner
+          echo DB_NAME=${{ vars.DB_NAME }} >> .env
+          echo DB_USER=${{ vars.DB_USER }} >> .env
+          echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
+          echo DB_DIALECT=postgres >> .env  # Example of a non-sensitive data, hardcoded
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install PostgreSQL client (Optional)
+        run: npm install pg
+
+      - name: Run tests
+        run: npm run test
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+
+  build_ami:
+    needs: integration-tests
+    if: success()
+    runs-on: ubuntu-latest
+
+    steps:
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+  
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+  
+      - name: 'Use gcloud CLI'
+        run: 'gcloud info'
+
+      - name: zip
+        run: zip -r webapp.zip .
+
+      - name: Install Packer
+        run: packer init ./packer/packer.pkr.hcl
+        
+      - name: Build packer
+        run: packer build ./packer/packer.pkr.hcl  
