@@ -65,4 +65,6 @@ Ensure PostgreSQL is running before starting the application.
 
 You might need to configure PostgreSQL according to your project's database schema. 
 
-For development purposes, you may want to add a script in your package.json for running the application with nodemon for automatic restarts on code changes. You can do this by adding a script like "dev": "nodemon app.js" (replace app.js with your entry file) and then start your application in development mode with npm run dev.
+For development purposes, you may want to add a script in your package.json for running the application with nodemon for automatic restarts on code changes. You can do this by adding a script like "dev": "nodemon app.js" (replace app.js with your entry file) and then start your application in development mode with npm run dev. 
+
+Packer
