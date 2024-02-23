@@ -67,8 +67,17 @@ jobs:
       - name: 'Use gcloud CLI'
         run: 'gcloud info'
 
+      - name: "Create .env file"
+        run: |
+          touch .env
+          echo DB_HOST=localhost >> .env  # Assuming the service is accessed via localhost within the runner
+          echo DB_NAME=${{ vars.DB_NAME }} >> .env
+          echo DB_USER=${{ vars.DB_USER }} >> .env
+          echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
+          echo DB_DIALECT=postgres >> .env  # Example of a non-sensitive data, hardcoded  
+
       - name: zip
-        run: zip -r webapp.zip .
+        run: zip -r webapp.zip .env *
 
       - name: Install Packer
         run: packer init ./packer/packer.pkr.hcl
