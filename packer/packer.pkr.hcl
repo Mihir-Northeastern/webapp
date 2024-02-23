@@ -52,14 +52,13 @@ build {
   }
 
   provisioner "shell" {
-    inline = [
-      "chmod +x /tmp/install.sh",
-      "/tmp/install.sh",
-      "chmod +x /tmp/postgres.sh",
-      "/tmp/postgres.sh",
-      "chmod +x /tmp/npm.sh",
-      "/tmp/npm.sh"
+    scripts = [
+      "./install.sh",
+      "./postgres.sh",
+      "./npm.sh",
     ]
+    pause_before = "10s"
+    timeout = "10s"
   }
 
 }
