@@ -11,7 +11,7 @@ sudo cp /tmp/webapp.zip /opt/csye6225/webapp.zip
 
 sudo su - csye6225
 cd /opt/csye6225 || exit
-sudo unzip webapp.zip 
+sudo unzip webapp.zip -d webapp
 cd webapp/ || exit
 
 sudo npm install
