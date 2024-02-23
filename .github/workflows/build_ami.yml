@@ -68,6 +68,7 @@ jobs:
         run: 'gcloud info'
 
       - name: "Create .env file"
+        working-directory: ${{ github.workspace }}  
         run: |
           touch .env
           echo DB_HOST=localhost >> .env  # Assuming the service is accessed via localhost within the runner
@@ -77,7 +78,8 @@ jobs:
           echo DB_DIALECT=postgres >> .env  # Example of a non-sensitive data, hardcoded  
 
       - name: zip
-        run: zip -r webapp.zip .env *
+        working-directory: ${{ github.workspace }}
+        run: zip -r webapp.zip .
 
       - name: Install Packer
         run: packer init ./packer/packer.pkr.hcl
