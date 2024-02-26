@@ -41,7 +41,7 @@ build {
     destination = "/tmp/postgres.sh"
   }
 
-  provisioner "fil" {
+  provisioner "file" {
     source      = "npm.sh"
     destination = "/tmp/npm.sh"
   }
