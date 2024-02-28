@@ -12,22 +12,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install PostgreSQL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql postgresql-contrib
+
+      - name: Initialize Database
+        run: |
+          sudo systemctl start postgresql.service
+          sudo systemctl status postgresql.service
+          sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres';"
+
+      - name: Setup Database
+        run: |
+          sudo -u postgres psql -c "CREATE USER mihirmakwana WITH PASSWORD '1998';"
+          sudo -u postgres psql -c "ALTER USER mihirmakwana WITH SUPERUSER CREATEDB CREATEROLE REPLICATION BYPASSRLS;"
+          sudo -u postgres psql -c "CREATE DATABASE webapp OWNER mihirmakwana;"
+
       - name: "Create .env file"
         run: |
           touch .env
-          echo DB_HOST=localhost >> .env  # Assuming the service is accessed via localhost within the runner
-          echo DB_NAME=${{ vars.DB_NAME }} >> .env
-          echo DB_USER=${{ vars.DB_USER }} >> .env
-          echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
-          echo DB_DIALECT=postgres >> .env  # Example of a non-sensitive data, hardcoded
-          echo PORT=${{ vars.PORT }} >> .env
+          echo "DB_HOST=localhost" >> .env
+          echo "DB_NAME=webapp" >> .env
+          echo "DB_USER=mihirmakwana" >> .env
+          echo "DB_PASSWORD=1998" >> .env
+          echo "DB_DIALECT=postgres" >> .env
+          echo "PORT=3000" >> .env
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Install PostgreSQL client (Optional)
-        run: npm install pg
-
       - name: Run tests
         run: npm run test
-        
