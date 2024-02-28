@@ -21,4 +21,5 @@ sudo cp /tmp/csye.service /etc/systemd/system/csye.service
 sudo systemctl daemon-reload
 sudo systemctl enable csye
 sudo systemctl start csye
+sudo chmod -R 750 /opt/csye6225/
 sudo systemctl status csye
