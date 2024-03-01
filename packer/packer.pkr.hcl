@@ -17,7 +17,7 @@ source "googlecompute" "basic_example" {
   project_id          = var.project_id
   source_image_family = "centos-stream-8"
   ssh_username        = "packer"
-  zone                = "us-east1-b"
+  zone                = "us-east1-a"
   machine_type        = "e2-standard-16"
 }
 
