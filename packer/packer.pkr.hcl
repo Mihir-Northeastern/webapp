@@ -18,7 +18,7 @@ source "googlecompute" "basic_example" {
   source_image_family = "centos-stream-8"
   ssh_username        = "packer"
   zone                = "us-east4-a"
-  machine_type        = "e2-standard-16"
+  machine_type        = "e2-standard-4"
 }
 
 build {
