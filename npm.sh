@@ -11,7 +11,7 @@ sudo cp /tmp/webapp.zip /opt/csye6225/webapp.zip
 
 sudo su - csye6225
 cd /opt/csye6225 || exit
-sudo unzip webapp.zip -d webapp
+sudo unzip webapp.zip
 cd webapp/ || exit
 
 sudo npm install
@@ -21,5 +21,4 @@ sudo cp /tmp/csye.service /etc/systemd/system/csye.service
 sudo systemctl daemon-reload
 sudo systemctl enable csye
 sudo systemctl start csye
-sudo chmod -R 750 /opt/csye6225/
 sudo systemctl status csye
