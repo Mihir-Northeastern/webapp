@@ -1,19 +1,19 @@
 #!/bin/bash
 
 sudo dnf update -y
+sudo dnf clean all -y
 sudo dnf install nano -y
 sudo dnf install lsof -y
 sudo groupadd csye6225
 sudo useradd -g csye6225 -s /usr/sbin/nologin csye6225
-sudo dnf module enable nodejs:18 -y
+sudo dnf module enable nodejs:20 -y
 sudo dnf install nodejs -y
-sudo dnf clean all -y
 sudo dnf install npm unzip -y
 sudo mkdir -p /opt/csye6225/
 sudo mv /tmp/webapp.zip /opt/csye6225/
 cd /opt/csye6225/
 pwd
-sudo unzip webapp.zip
+sudo unzip webapp.zip -d webapp
 cd webapp
 sudo npm install
 
