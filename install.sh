@@ -1,24 +1,22 @@
 #!/bin/bash
 
-# Clean the DNF cache
-sudo dnf clean all -y
-
-# Update all packages
 sudo dnf update -y
-
-# Install Zip
-sudo dnf install unzip -y
-
-# Reset the Node.js module
-sudo dnf module reset nodejs -y
-
-# Enable a specific version of Node.js module
-sudo dnf module enable nodejs:20 -y
-
-# Install the enabled Node.js module
-sudo dnf module install nodejs:20 -y
-
-# Install nano text editor
 sudo dnf install nano -y
+sudo dnf install lsof -y
+sudo groupadd csye6225
+sudo useradd -g csye6225 -s /usr/sbin/nologin csye6225
+sudo dnf module enable nodejs:18 -y
+sudo dnf install nodejs -y
+sudo dnf clean all -y
+sudo dnf install npm unzip -y
+sudo mkdir -p /opt/csye6225/
+sudo mv /tmp/webapp.zip /opt/csye6225/
+cd /opt/csye6225/
+pwd
+sudo unzip webapp.zip
+cd webapp
+sudo npm install
 
-echo "Script execution completed."
+sudo cp /tmp/csye.service /etc/systemd/system/csye.service
+sudo chown -R csye6225:csye6225 /opt/csye6225/
+sudo chmod -R 750 /opt/csye6225/

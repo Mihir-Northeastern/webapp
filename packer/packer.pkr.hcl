@@ -37,28 +37,16 @@ build {
   }
 
   provisioner "file" {
-    source      = "postgres.sh"
-    destination = "/tmp/postgres.sh"
-  }
-
-  provisioner "file" {
-    source      = "npm.sh"
-    destination = "/tmp/npm.sh"
-  }
-
-  provisioner "file"{
-    source = "csye.service"
+    source      = "csye.service"
     destination = "/tmp/csye.service"
   }
 
   provisioner "shell" {
     scripts = [
       "./install.sh",
-      "./postgres.sh",
-      "./npm.sh",
     ]
     pause_before = "10s"
-    timeout = "10s"
+    timeout      = "10s"
   }
 
 }
