@@ -41,12 +41,29 @@ build {
     destination = "/tmp/csye.service"
   }
 
+  provisioner "file" {
+    source      = "config.yaml"
+    destination = "/tmp/config.yaml"
+  }
+
   provisioner "shell" {
     scripts = [
       "./install.sh",
     ]
     pause_before = "10s"
     timeout      = "10s"
+  }
+
+  provisioner "shell" {
+    inline = [
+      "sudo bash -c 'curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh'",
+      "sudo bash add-google-cloud-ops-agent-repo.sh --also-install",
+      "sudo cp -f /tmp/config.yaml /etc/google-cloud-ops-agent/config.yaml",
+      "sudo systemctl restart google-cloud-ops-agent",
+      "sudo systemctl status google-cloud-ops-agent",
+    ]
+    pause_before = "10s"
+    execute_command = "echo 'packer' | {{.Vars}} sudo -S sh -c '{{.Path}}'"
   }
 
 }
