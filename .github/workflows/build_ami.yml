@@ -16,6 +16,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup system environment
+        run: |
+          sudo groupadd csye6225
+          sudo useradd -g csye6225 -s /usr/sbin/nologin csye6225
+          sudo mkdir -p /var/log/webapplogs/
+          sudo chown -R csye6225:csye6225 /var/log/webapplogs/
+          sudo chmod -R 775 /var/log/webapplogs/
+
       - name: Install PostgreSQL
         run: |
           sudo apt-get update
