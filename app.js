@@ -2,11 +2,18 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import initializeRoutes from './routes/index.js';
+import logger from './logger.js';
+import expressWinston from 'express-winston';
 
 // Load the environment variables from .env file
 dotenv.config();
 
 const app = express();
+
+app.use(expressWinston.logger({
+    winstonInstance: logger,
+    statusLevels: true
+}))
 
 //Adding No cache for the required headers
 app.use((req, res, next) => {
