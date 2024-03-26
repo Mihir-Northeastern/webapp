@@ -70,3 +70,5 @@ For development purposes, you may want to add a script in your package.json for 
 # Packer
 
 Packer Installation
+
+# Logs
