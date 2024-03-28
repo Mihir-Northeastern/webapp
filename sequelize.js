@@ -1,6 +1,7 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import dotenv from 'dotenv';
 import { UserModel } from "./models/userModel.js";
+import { VerifyModel } from './models/verifyModel.js';
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ export const sequelize = new Sequelize(
 );
 
 export const User = UserModel(sequelize, DataTypes);
+export const Verify = VerifyModel(sequelize, DataTypes);
 
 export const syncdb = async () => {
     try{
