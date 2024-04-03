@@ -21,6 +21,10 @@ export const VerifyModel = (sequelize, DataTypes) => {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,
         },
+        verified: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     });
 
     return Verify;
