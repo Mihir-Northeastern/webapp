@@ -2,6 +2,7 @@ import express from 'express';
 import {auth} from '../authentication/auth.js';
 import * as userController from '../controllers/userController.js';
 import * as healthZService from '../services/healthzService.js';
+import { Verify } from '../sequelize.js';
 
 const userRouter = express.Router();
 
@@ -88,19 +89,41 @@ const validPut = (allow, ignore) => {
 }
 
 
+const userVerified = (req, res, next) => {
+    Verify.findOne({ where: { username: req.user.username } }).then((user) => {
+        if (user) {
+            if (user.verified) {
+                next();
+            } else {
+                res.status(403).send();
+            }
+        } else {
+            res.status(403).send();
+        }
+        }).catch((err) => {
+            res.status(400).send();
+        });
+}
 
 
-userRouter.route('/')
-    .post(checkdbStatus, validPost(["first_name", "last_name", "username", "password"],["account_created","account_updated"]),userController.createUser)
-    .all((req, res) => {    
-        res.status(405).send();
-    });
+
+    userRouter.route('/')
+        .post(checkdbStatus, validPost(["first_name", "last_name", "username", "password"],["account_created","account_updated"]),userController.createUser)
+        .all((req, res) => {    
+            res.status(405).send();
+        });
 
 userRouter.route('/self')
-    .get(checkdbStatus, auth, checkPayload, userController.getUserById)
-    .put(checkdbStatus, auth, validPut(["first_name", "last_name", "password"],["account_created","account_updated"]), userController.updateUser)
+    .get(checkdbStatus, auth, checkPayload, userVerified, userController.getUserById)
+    .put(checkdbStatus, auth, validPut(["first_name", "last_name", "password"],["account_created","account_updated"]), userVerified, userController.updateUser)
     .all((req, res) => {
         res.status(405).send();
-    });    
+    });
+    
+userRouter.route('/verify')
+.get(userController.verifyUser)
+.all((req, res) => {
+    res.status(405).send();
+});      
 
 export default userRouter;
