@@ -34,7 +34,6 @@ describe('POST /v1/user/', () => {
             .send(userData);
         expect(response.statusCode).toBe(201);
 
-        await Verify.update({ verified: true }, { where: { username: userData.username } });
         // const userFromApi = await request(app)
         // .get('/v1/user/self')
         // .set('Authorization', `Basic ${base64Credentials}`);
