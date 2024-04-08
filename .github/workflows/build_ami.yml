@@ -97,6 +97,8 @@ jobs:
         
       - name: Build packer
         run: |
-          ami_id=$(packer build -machine-readable ./packer/packer.pkr.hcl | awk -F, '$2 ~ /^artifact,0,id/ {print $NF}')
-          echo "AMI ID: $ami_id" >> $GITHUB_ENV
+          packer_output=$(packer build ./packer/packer.pkr.hcl)
+          ami_id=$(echo "$packer_output" | sed -n 's/.*: \(packer-[0-9]*\)/\1/p')
+          echo "AMI_ID=$ami_id" >> $GITHUB_ENV
+
            
