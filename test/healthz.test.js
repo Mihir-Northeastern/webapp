@@ -4,6 +4,7 @@ import btoa from 'btoa';
 import { syncdb } from '../sequelize.js';
 import { Verify } from '../models/verifyModel.js';
 
+
 beforeAll(async () => {
     await syncdb();
 });
@@ -19,7 +20,7 @@ describe('GET /healthz', () => {
 const userData = {
     first_name: "Narendra",
     last_name: "Makwana",
-    username: "nss.ssmmm@gmil.omm",
+    username: "makwanamihir5@gmail.com",
     password: "1234" 
 };
 
