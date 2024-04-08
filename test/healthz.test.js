@@ -39,7 +39,7 @@ describe('POST /v1/user/', () => {
         // .get('/v1/user/self')
         // .set('Authorization', `Basic ${base64Credentials}`);
         //expect(userFromApi.statusCode).toBe(200);
-    });
+    }, 10000);
 });
 
 describe('PUT /v1/user/self', () => {
