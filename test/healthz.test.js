@@ -2,7 +2,7 @@ import request from 'supertest';
 import app from '../app.js';
 import btoa from 'btoa';
 import { syncdb } from '../sequelize.js';
-import { Verify } from './models/verifyModel.js';
+import { Verify } from '../models/verifyModel.js';
 
 beforeAll(async () => {
     await syncdb();
