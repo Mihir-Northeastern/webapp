@@ -2,6 +2,8 @@ import request from 'supertest';
 import app from '../app.js';
 import btoa from 'btoa';
 import { syncdb } from '../sequelize.js';
+import { User } from "./models/userModel.js";
+import { Verify } from './models/verifyModel.js';
 
 beforeAll(async () => {
     await syncdb();
@@ -30,8 +32,9 @@ describe('POST /v1/user/', () => {
         const response = await request(app)
             .post('/v1/user/')
             .send(userData);
-        expect(response.statusCode).toBe(403);
+        expect(response.statusCode).toBe(201);
 
+        await Verify.update({ verified: true }, { where: { username: userData.username } });
         // const userFromApi = await request(app)
         // .get('/v1/user/self')
         // .set('Authorization', `Basic ${base64Credentials}`);
