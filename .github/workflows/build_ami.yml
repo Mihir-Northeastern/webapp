@@ -100,5 +100,8 @@ jobs:
           packer_output=$(packer build ./packer/packer.pkr.hcl)
           ami_id=$(echo "$packer_output" | sed -n 's/.*: \(packer-[0-9]*\)/\1/p')
           echo "AMI_ID=$ami_id" >> $GITHUB_ENV
+      
+      - name: Check AMI ID
+        run: echo "AMI_ID= $AMI_ID"    
 
            
