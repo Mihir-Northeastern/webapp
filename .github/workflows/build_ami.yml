@@ -126,11 +126,14 @@ jobs:
         run: |
           gcloud compute instance-groups managed set-instance-template instance-group-manager \
           --template=projects/dev-gcp-414917/regions/us-east4/instanceTemplates/instance-template-git \
+          --region=us-east4 \
+          --zone=us-east4-a
         
       - name: Start Rolling Update of Instance Group Manager
         run: |
           gcloud compute instance-groups managed rolling-action start-update instance-group-manager \
           --version=template=instance-template-git \
+          --region=us-east4 \
           --zone=us-east4-a
       
 
