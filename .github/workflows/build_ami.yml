@@ -103,16 +103,10 @@ jobs:
       
       - name: Check MIG ID
         run: echo "MIG_ID= $MIG_ID"
-
-      - name: Create UUID
-        id: generate_uuid
-        run: echo "::set-output name=UUID::$(uuidgen)"
-        
+  
       - name: Create Image
         run: |
-          UUID=${{ steps.generate_uuid.outputs.UUID }}
-          NEW_TEMPLATE_NAME="$TEMPLATE_NAME-$UUID"
-          gcloud compute instance-templates create $NEW_TEMPLATE_NAME \
+          gcloud compute instance-templates create instance-template-git \
           --instance-template-region=us-east4 \
           --machine-type=e2-standard-2 \
           --image=${{env.MIG_ID}} \
@@ -131,7 +125,7 @@ jobs:
       - name: Update Instance Group Manager using new Template
         run: |
           gcloud compute instance-groups managed set-instance-template instance-group-manager \
-          --template=projects/dev-gcp-414917/regions/us-east4/instanceTemplates/$NEW_TEMPLATE_NAME \
+          --template=projects/dev-gcp-414917/regions/us-east4/instanceTemplates/instance-template-git \
           --region=us-east4
         
       - name: Check Instance Group Manager status
@@ -144,7 +138,7 @@ jobs:
         if: steps.check_instance_group_status.outputs.status == 'RUNNING'
         run: |
           gcloud compute instance-groups managed rolling-action start-update instance-group-manager \
-          --version=template=projects/dev-gcp-414917/regions/us-east4/instanceTemplates/$NEW_TEMPLATE_NAME \
+          --version=template=projects/dev-gcp-414917/regions/us-east4/instanceTemplates/instance-template-git \
           --region=us-east4
 
            
