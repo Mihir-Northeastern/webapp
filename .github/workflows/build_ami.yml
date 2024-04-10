@@ -110,7 +110,7 @@ jobs:
           --machine-type=e2-standard-2 \
           --image=${{env.AMI_ID}} \
           --region=us-east4 \
-          --network=vpc1 \
+          --network=webapp-vpc \
           --subnet=webapp \
           --boot-disk-size=100GB \
           --boot-disk-type=pd-balanced \
