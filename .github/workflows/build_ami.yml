@@ -98,24 +98,30 @@ jobs:
       - name: Build packer
         run: |
           packer_output=$(packer build ./packer/packer.pkr.hcl)
-          ami_id=$(echo "$packer_output" | sed -n 's/.*: \(packer-[0-9]*\)/\1/p')
-          echo "AMI_ID=$ami_id" >> $GITHUB_ENV
+          mig_id=$(echo "$packer_output" | sed -n 's/.*: \(packer-[0-9]*\)/\1/p')
+          echo "MIG_ID=$mig_id" >> $GITHUB_ENV
       
-      - name: Check AMI ID
-        run: echo "AMI_ID= $AMI_ID"
+      - name: Check MIG ID
+        run: echo "MIG_ID= $MIG_ID"
+
+      - name: Create UUID
+        id: generate_uuid
+        run: echo "::set-output name=UUID::$(uuidgen)"
         
-      - name: Create AMI
+      - name: Create Image
         run: |
-          gcloud compute instance-templates create instance-template-git \
+          UUID=${{ steps.generate_uuid.outputs.UUID }}
+          NEW_TEMPLATE_NAME="$TEMPLATE_NAME-$UUID"
+          gcloud compute instance-templates create $NEW_TEMPLATE_NAME \
           --instance-template-region=us-east4 \
           --machine-type=e2-standard-2 \
-          --image=${{env.AMI_ID}} \
+          --image=${{env.MIG_ID}} \
           --region=us-east4 \
           --network=webapp-vpc \
           --subnet=webapp \
           --boot-disk-size=100GB \
           --boot-disk-type=pd-balanced \
-          --metadata dbUser=mihirmakwana,dbPass=C5KjA5ew872uOmtc,dbName=webapp,dbHost=10.238.205.2,MAILGUN_API_KEY=4b552d5c1cd188486cde6483ae5b49aa-f68a26c9-47f153c2,GCP_PROJECT=dev-gcp-414917,MAILGUN_DOMAIN=verifyemail.cloudwebappserver.com \
+          --metadata dbUser=${{secrets.WFUSER}},dbPass=${{secrets.WFPASS}},dbName=${{secrets.WFDB}},dbHost=${{secrets.WFHOST}} \
           --metadata-from-file=startup-script=./db.sh \
           --service-account=default@dev-gcp-414917.iam.gserviceaccount.com \
           --scopes=cloud-platform \
@@ -125,15 +131,20 @@ jobs:
       - name: Update Instance Group Manager using new Template
         run: |
           gcloud compute instance-groups managed set-instance-template instance-group-manager \
-          --template=projects/dev-gcp-414917/regions/us-east4/instanceTemplates/instance-template-git \
+          --template=projects/dev-gcp-414917/regions/us-east4/instanceTemplates/$NEW_TEMPLATE_NAME \
           --region=us-east4
         
+      - name: Check Instance Group Manager status
+        id: check_instance_group_status
+        run: |
+          status=$(gcloud compute instance-groups managed describe instance-group-manager --region=us-east4 --format="value(status)")
+          echo "::set-output name=status::$status"
+        
       - name: Start Rolling Update of Instance Group Manager
+        if: steps.check_instance_group_status.outputs.status == 'RUNNING'
         run: |
           gcloud compute instance-groups managed rolling-action start-update instance-group-manager \
-          --version=template=projects/dev-gcp-414917/regions/us-east4/instanceTemplates/instance-template-git \
+          --version=template=projects/dev-gcp-414917/regions/us-east4/instanceTemplates/$NEW_TEMPLATE_NAME \
           --region=us-east4
-    
-      
 
            
