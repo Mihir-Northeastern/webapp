@@ -115,6 +115,7 @@ jobs:
           --subnet=webapp \
           --boot-disk-size=100GB \
           --boot-disk-type=pd-balanced \
+          --boot-disk-kms-key=${{secrets.KMS_KEY}}
           --metadata dbUser=${{secrets.WFUSER}},dbPass=${{secrets.WFPASS}},dbName=${{secrets.WFDB}},dbHost=${{secrets.WFHOST}} \
           --metadata-from-file=startup-script=./db.sh \
           --service-account=default@dev-gcp-414917.iam.gserviceaccount.com \
@@ -128,17 +129,35 @@ jobs:
           --template=projects/dev-gcp-414917/regions/us-east4/instanceTemplates/instance-template-git \
           --region=us-east4
         
-      - name: Check Instance Group Manager status
-        id: check_instance_group_status
-        run: |
-          status=$(gcloud compute instance-groups managed describe instance-group-manager --region=us-east4 --format="value(status)")
-          echo "::set-output name=status::$status"
-        
       - name: Start Rolling Update of Instance Group Manager
-        if: steps.check_instance_group_status.outputs.status == 'RUNNING'
         run: |
           gcloud compute instance-groups managed rolling-action start-update instance-group-manager \
           --version=template=projects/dev-gcp-414917/regions/us-east4/instanceTemplates/instance-template-git \
           --region=us-east4
+        continue-on-error: true  
 
-           
+      - name: Refresh Instance Group Manager status
+        id: refresh
+        run: |
+          sleep 60
+      
+      - name: Instance Group Manager Monitoring Status
+        run: |
+          status=$(gcloud compute instance-groups managed wait-until instance-group-manager --region=us-east4 --stable)
+          echo "Status: $status"
+          if [[ $status == *"Group is stable"* ]]; then
+          echo "Refreshed successfully"
+          break
+          else
+            echo "Refresh Failed"
+            exit 1
+          fi
+          if [ "$status" == "UPDATING" ]; then
+            echo "Instance Group Manager is still updating"
+            exit 1
+          fi
+          if [ "$status" == "READY" ]; then
+            echo "Instance Group Manager is ready"
+            exit 0
+          fi
+          exit 1
