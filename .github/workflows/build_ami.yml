@@ -116,7 +116,7 @@ jobs:
           --boot-disk-size=100GB \
           --boot-disk-type=pd-balanced \
           --boot-disk-kms-key=${{secrets.KMS_KEY}} \
-          --metadata=dbUser=${{secrets.WFUSER}},dbPass=${{secrets.WFPASS}},dbName=${{secrets.WFDB}},dbHost=${{secrets.WFHOST}} \
+          --metadata dbUser=${{secrets.WFUSER}},dbPass=${{secrets.WFPASS}},dbName=${{secrets.WFDB}},dbHost=${{secrets.WFHOST}} \
           --metadata-from-file=startup-script=./db.sh \
           --service-account=default@dev-gcp-414917.iam.gserviceaccount.com \
           --scopes=cloud-platform \
