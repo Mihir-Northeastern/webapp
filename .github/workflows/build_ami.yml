@@ -107,6 +107,7 @@ jobs:
       - name: Create AMI
         run: |
           gcloud compute instance-templates create instance-template-git \
+          --instance-template-region=us-east4 \
           --machine-type=e2-standard-2 \
           --image=${{env.AMI_ID}} \
           --region=us-east4 \
@@ -123,7 +124,8 @@ jobs:
         
       - name: Update Instance Group Manager using new Template
         run: |
-          gcloud compute instance-groups managed set-instance-template instance-group-manager --template=instance-template-git --zone=us-east4-a
+          gcloud compute instance-groups managed set-instance-template instance-group-manager \
+          --template=projects/dev-gcp-414917/regions/us-east4/instanceTemplates/instance-template-git \
         
       - name: Start Rolling Update of Instance Group Manager
         run: |
