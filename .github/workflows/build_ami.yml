@@ -102,6 +102,34 @@ jobs:
           echo "AMI_ID=$ami_id" >> $GITHUB_ENV
       
       - name: Check AMI ID
-        run: echo "AMI_ID= $AMI_ID"    
+        run: echo "AMI_ID= $AMI_ID"
+        
+      - name: Create AMI
+        run: |
+          gcloud compute instance-templates create instance-template-git \
+          --machine-type=e2-standard-2 \
+          --image=${{env.AMI_ID}} \
+          --region=us-east4 \
+          --network=vpc1 \
+          --subnet=webapp \
+          --boot-disk-size=100GB \
+          --boot-disk-type=pd-balanced \
+          --metadata USERNAME=mihirmakwana,PASSWORD=C5KjA5ew872uOmtc,DBNAME=webapp,DBHOST=10.238.205.2,MAILGUN_API_KEY=4b552d5c1cd188486cde6483ae5b49aa-f68a26c9-47f153c2,GCP_PROJECT=dev-gcp-414917,MAILGUN_DOMAIN=verifyemail.cloudwebappserver.com \
+          --metadata-from-file=startup-script=./db.sh \
+          --service-account=default@dev-gcp-414917.iam.gserviceaccount.com \
+          --scopes=cloud-platform \
+          --tags=webapp,http-server,https-server \
+          --description="Instance Template for GCP VM with container"
+        
+      - name: Update Instance Group Manager using new Template
+        run: |
+          gcloud compute instance-groups managed set-instance-template instance-group-manager --template=instance-template-git --zone=us-east4-a
+        
+      - name: Start Rolling Update of Instance Group Manager
+        run: |
+          gcloud compute instance-groups managed rolling-action start-update instance-group-manager \
+          --version=template=instance-template-git \
+          --zone=us-east4-a
+      
 
            
