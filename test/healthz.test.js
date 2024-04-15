@@ -26,43 +26,43 @@ const userData = {
 
 const base64Credentials = btoa(`${userData.username}:${userData.password}`);
 
-describe('POST /v1/user/', () => {
+describe('POST /v2/user/', () => {
     it('should create an user', async () => {
       
         const response = await request(app)
-            .post('/v1/user/')
+            .post('/v2/user/')
             .send(userData);
         expect(response.statusCode).toBe(201);
 
         // const userFromApi = await request(app)
-        // .get('/v1/user/self')
+        // .get('/v2/user/self')
         // .set('Authorization', `Basic ${base64Credentials}`);
         //expect(userFromApi.statusCode).toBe(200);
     }, 10000);
 });
 
-describe('PUT /v1/user/self', () => {
+describe('PUT /v2/user/self', () => {
     it('should update an user', async () => {
         const updateUser = {
                 first_name: "Seema",
         };
         const response = await request(app)
-            .put('/v1/user/self')
+            .put('/v2/user/self')
             .set('Authorization', `Basic ${base64Credentials}`)
             .send(updateUser);
         //expect(response.statusCode).toBe(403);
    
         const userFromApi = await request(app)
-        .get('/v1/user/self')
+        .get('/v2/user/self')
         .set('Authorization', `Basic ${base64Credentials}`);
         //expect(userFromApi.body.first_name).toBe(updateUser.first_name);
     });
 });
 
-describe('GET /v1/user/verify', () => {
+describe('GET /v2/user/verify', () => {
     it('should verify user credentials', async () => {
         const response = await request(app)
-            .get('/v1/user/verify')
+            .get('/v2/user/verify')
             .set('Authorization', `Basic ${base64Credentials}`);
         expect(response.statusCode).toBe(403);
         // Assert other expectations about the verification response
